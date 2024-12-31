@@ -2,11 +2,17 @@ package com.example.room_persistence.room
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.room_persistence.R
 
-class NoteAdapter(private val notes:List<Note>) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(
+    private val notes:List<Note>,
+    private val onDeleteListener: (Int) -> Unit,
+    private val onEditListener:  (Note) -> Unit
+
+    ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteAdapter.NoteViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false)
@@ -16,11 +22,23 @@ class NoteAdapter(private val notes:List<Note>) : RecyclerView.Adapter<NoteAdapt
     override fun onBindViewHolder(holder: NoteAdapter.NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.bind(note)
+        holder.deleteButton.setOnClickListener {
+            onDeleteListener(note.id)
+        }
+
+        holder.editButton.setOnClickListener{
+            onEditListener(note)
+        }
+
     }
 
     override fun getItemCount(): Int = notes.size
 
     class NoteViewHolder(private val view: android.view.View) : RecyclerView.ViewHolder(view) {
+
+        val deleteButton: ImageButton = view.findViewById(R.id.buttonDelete)
+        val editButton: ImageButton = view.findViewById(R.id.buttonEdit)
+
         fun bind(note:Note) {
             val titleTextView = view.findViewById<TextView>(R.id.textViewTitle)
             val contentTextView = view.findViewById<TextView>(R.id.textViewContent)

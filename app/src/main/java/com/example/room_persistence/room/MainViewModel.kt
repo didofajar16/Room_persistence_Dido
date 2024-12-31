@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel (application: Application) : AndroidViewModel(application) {
@@ -28,4 +29,17 @@ class MainViewModel (application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun updateNote(note:Note) {
+        viewModelScope.launch( Dispatchers.IO ) {
+            noteDao.update(note)
+        }
+    }
+
+    fun deleteNoteById(id:Int) {
+        viewModelScope.launch (Dispatchers.IO){
+            noteDao.deleteById(id)
+        }
+    }
+
 }
